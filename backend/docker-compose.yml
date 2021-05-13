@@ -1,0 +1,47 @@
+version: '3'
+services:
+
+  # frontend web server
+  # reverseproxy:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile-nginx
+  #   ports:
+  #     - "80:80"
+  #   networks:
+  #     - backendNetwork
+  #   depends_on:
+  #     - express-app
+
+  # express-app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile-express
+  #   # ports: 
+  #   #   - "8080:8080"
+  #   networks:
+  #     - backendNetwork
+
+  db:
+    image: "postgres:latest"
+    ports:
+      - "5432:5432" #localhost:containerport
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: demodb
+    networks:
+      backendNetwork:
+        ipv4_address: 10.5.0.5
+
+volumes:
+  pgdata:
+
+networks:
+  backendNetwork:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
